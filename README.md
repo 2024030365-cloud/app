@@ -35,13 +35,13 @@ php artisan serve
 
 ---
 
-## Estructura destacada
+## Estructura 
 
-| Elemento | Descripción |
+| Elemento |  |
 |---|---|
-| `app/Http/Controllers/Api/V1/` | Controladores versionados de la API |
-| `routes/api.php` | Definición de endpoints |
-| `app/Http/Resources/` | Filtro de datos en las respuestas |
+| `app/Http/Controllers/Api/V1/` | Controladores de la API |
+| `routes/tenant.php` | endpoints |
+| `app/Http/Resources/` | Filtro de la respuesta de la api |
 
 ---
 
@@ -57,11 +57,8 @@ http://{empresa}.localhost:8000/api/v1/
 
 ---
 
-## Estructura
+## ¿Que utilice?
 - **Versionado (V1):** Permite agregar nuevas versiones sin romper la API actual.
 - **JWT:** Autenticación.
 - **Resources:** Filtran la respuesta.
 - **Multi-tenancy:** Cada empresa tiene su propia base de datos.
-- **JWT:** Autenticación sin sesiones — el usuario recibe un token al iniciar sesión y lo usa en cada petición.
-- **Resources:** Filtran la respuesta para no exponer datos sensibles (como contraseñas).
-- **Multi-tenancy:** Cada empresa tiene su propia base de datos; sus datos son invisibles para las demás.

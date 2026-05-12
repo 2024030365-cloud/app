@@ -18,12 +18,13 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
 
-            // your custom columns may go here
-
+            $table->string('nombre_empresa');
+            $table->string('slug')->unique();
             $table->timestamps();
             $table->json('data')->nullable();
         });
     }
+    
 
     /**
      * Reverse the migrations.

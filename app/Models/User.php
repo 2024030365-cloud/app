@@ -16,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    protected $connection = 'mysql';
 
     /**
      * Get the attributes that should be cast.
@@ -44,4 +45,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function tenants()
+{
+    return $this->belongsToMany(Tenant::class, 'tenant_user', 'user_id', 'tenant_id');
+}
 }

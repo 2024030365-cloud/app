@@ -16,6 +16,10 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        if (auth()->user()->role !== 'superadmin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }   
+    
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

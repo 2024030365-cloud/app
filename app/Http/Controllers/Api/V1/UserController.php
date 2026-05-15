@@ -9,52 +9,67 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index($success = true, $data = null, $message = 'obtenido correctamente', $code = 200)
     {
-        return UserResource::collection(User::latest()->paginate());
-    }
+     
 
+        return SuccesResponse(true, UserResource::collection(User::all()), 'obtenido correctamente', 200);
+    }
+    
     public function store(Request $request)
     {
-        if (auth()->user()->role !== 'superadmin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }   
+         $user = \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
     
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        return new UserResource($user);
+    if (!$user || $user->role !== 'superadmin') {
+      //  return response()->json(['message' => 'Unauthorized'], 403);
+          return ErrorResponse(false, 'Unauthorized', 401);
     }
 
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email'    => 'required|email',
+        'password' => 'required|min:6',
+    ]);
+
+    $newUser = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+    ]);
+
+    // return new UserResource($newUser);
+     return SuccesResponse(true, new UserResource($newUser), 'Usuario creado correctamente', 201);
+    
+    }
     public function show(User $user)
     {
-        return new UserResource($user);
+        // return new UserResource($user);
+        return SuccesResponse(true, new UserResource($user), 'obtenido correctamente', 200);
     }
 
     public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-        ]);
+            'email' => 'required|email|unique:central.users,email,' . $user->id,        ]);
 
         $user->update($request->all());
 
-        return new UserResource($user);
+        // return new UserResource($user);
+        return SuccesResponse(true, new UserResource($user), 'Usuario actualizado correctamente', 200);
     }
 
-    public function destroy(User $user)
+    public function destroy(User $del)
     {
-        $user->delete();
-        return response()->noContent();
+    $user = \PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
+
+    if (!$user || $user->role !== 'superadmin') {
+    // return response()->json(['message' => 'Unauthorized'], 403);
+       return ErrorResponse(false, 'Unauthorized', 401);
+    }
+
+    $del->delete();
+        return SuccesResponse(true, null, 'Usuario eliminado correctamente', 200);
+        //return response()->noContent();
     }
 }

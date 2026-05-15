@@ -11,9 +11,9 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credenciales = $request->only('email', 'password');
-
         if (! $token = Auth::guard('api')->attempt($credenciales)) {
-            return response()->json(['mensaje' => 'Datos incorrectos'], 401);
+           // return response()->json(['mensaje' => 'Datos incorrectos'], 401);
+            return ErrorResponse(false, 'Datos incorrectos', 401);
         }
 
         return response()->json([

@@ -19,12 +19,14 @@ class Acceso
 
         $tenantId = tenant('id');
 
+        if (!$user || !$user->tenants()->where('tenant_id', $tenantId)->exists()) {
+         return ErrorResponse(false, 'No tienes Permisos en esta empresa', 403);
+
+        } 
+
+      return $next($request);   
         
-        if (!$user->tenants()->where('tenant_id', $tenantId)->exists()) {
-            return response()->json([
-                'error' => 'Acceso denegado: No tienes permiso para esta empresa.'
-            ], 403);
         }
 
-        return $next($request);    }
-}
+    }
+

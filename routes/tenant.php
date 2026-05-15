@@ -23,4 +23,3 @@ Route::prefix('/{tenant}')->middleware([
         
     });
 });
-
